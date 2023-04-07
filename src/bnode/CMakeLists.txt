@@ -8,7 +8,7 @@ set(SGX_HW ON)  # default: ON
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
-set(EDL_SEARCH_PATHS Enclave /home/ember/Git/linux-sgx/linux-sgx/external/dcap_source/QuoteVerification/sgxssl/Linux/package/include/)
+set(EDL_SEARCH_PATHS Enclave /opt/intel/intel-sgx-ssl-lin_2.16_1.1.1m_update/Linux/package/include) # change_sgx_path
 
 add_compile_options(-fpermissive)
 

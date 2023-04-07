@@ -7,6 +7,10 @@
 
 - Operating systems
   - Ubuntu 18.04
+  - gcc 7.50 (not change)
+  - cmake 3.26.3 (snap install cmake --classic)
+  - make 4.1 (not change)
+  - openssl 1.1.1t (sgxssl requires)
 - Compute backends
   - Intel CPU with SGX support
    </details>
@@ -17,47 +21,168 @@
 sudo apt install -y dkms
 sudo apt install -y build-essential ocaml ocamlbuild automake autoconf libtool wget python libssl-dev git cmake perl
 ```
-
-### SGX Driver & SGX PSW & SGX SDK
-
+***
+### SGX Driver & SGX PSW & SGX SDK & SGX SSL
+* linux sgx: 2.16
+* sgx driver: 1.41
+* sgx sdk: 2.16
+* sgx psw: no version
+* sgx ssl: linux-2.16-1.1.1m (https://github.com/intel/intel-sgx-ssl/archive/refs/tags/lin_2.16_1.1.1m_update.zip)
+* openssl: 1.1.1m
+#### test if SGX is supported
 ```
-# SGX Driver
+git clone https://github.com/ayeks/SGX-hardware.git
+cd SGX-hardware
+gcc test-sgx.c -o test-sgx
+./test-sgx
+```
+the output should be like this
+```
+...
+Extended feature bits (EAX=07H, ECX=0H)
+eax: 0 ebx: 29c6fbf ecx: 0 edx: 0
+sgx available: 1
+
+CPUID Leaf 12H, Sub-Leaf 0 of Intel SGX Capabilities (EAX=12H,ECX=0)
+eax: 1 ebx: 0 ecx: 0 edx: 241f
+sgx 1 supported: 1
+sgx 2 supported: 0
+...
+```
+
+or you can check using "cpuid -1 | grep -i sgx"
+the output should be three "true" with a "false" in the end
+```
+  SGX: Software Guard Extensions supported = true
+  SGX_LC: SGX launch config supported      = true
+  SGX capability (0x12/0):
+  SGX1 supported                         = true
+  SGX2 supported                         = false
+  SGX attributes (0x12/1):
+```
+if supported, install all SGX tools in /opt/intel:
+```
+mkdir -p /opt/intel
+cd /opt/intel
+```
+**!!! WARNING: Do not try to change the installation path, some variables are hard-coded in the code !!!**
+
+#### SGX Driver
+```
 wget https://download.01.org/intel-sgx/sgx-linux/2.16/distro/ubuntu18.04-server/sgx_linux_x64_driver_1.41.bin
 sudo chmod 777 ./sgx_linux_x64_driver_1.41.bin
 sudo ./sgx_linux_x64_driver_1.41.bin
-sudo rm ./sgx_linux_x64_driver_1.41.bin
-
-# SGX PSW
-echo 'deb [arch=amd64] https://download.01.org/intel-sgx/sgx_repo/ubuntu bionic main'| tee /etc/apt/sources.list.d/intel-sgx.list
+```
+#### SGX PSW
+```
+echo 'deb [arch=amd64] https://download.01.org/intel-sgx/sgx_repo/ubuntu bionic main'| sudo tee /etc/apt/sources.list.d/intel-sgx.list
+sudo su
 wget -qO - https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key | apt-key add -
+su <username>
 sudo apt update
 sudo apt install -y libsgx-launch libsgx-urts
 sudo apt install -y libsgx-epid libsgx-urts
 sudo apt install -y libsgx-quote-ex libsgx-urts
-
-# SGX SDK
+```
+#### SGX SDK
+```
 wget https://download.01.org/intel-sgx/sgx-linux/2.16/distro/ubuntu18.04-server/sgx_linux_x64_sdk_2.16.100.4.bin
 sudo chmod 777 ./sgx_linux_x64_sdk_2.16.100.4.bin
 sudo ./sgx_linux_x64_sdk_2.16.100.4.bin
-sudo rm ./sgx_linux_x64_sdk_2.16.100.4.bin
-
+```
+choose "no" and change the install path to "/opt/intel"
+**!!! warning: install path must be "/opt/intel" !!!**
+```
 echo "source /opt/intel/sgxsdk/environment" >> ~/.bashrc
+source ~/.bashrc
+```
+You can find sample code for testing from /opt/intel/sgxsdk/SampleCode/SampleEnclave
+```
+pushd /opt/intel/sgxsdk/SampleCode/SampleEnclave
+make
+./app
+```
+the output should be like:
+```
+Checksum(0x0x7ffed9a2bb00, 100) = 0xfffd4143
+Info: executing thread synchronization, please wait...  
+Info: SampleEnclave successfully returned.
+Enter a character before exit ...
 ```
 
-Modify `CMAKE_MODULE_PATH` in `src/CMakeLists.txt` according to the actual installation position of SGX SDK, default is `/opt/intel/sgxsdk`.
+#### SGX SSL
+install ToolChain
+```
+wget https://download.01.org/intel-sgx/sgx-linux/2.16/as.ld.objdump.r4.tar.gz
+tar -zxf ./as.ld.objdump.r4.tar.gz
+sudo cp external/toolset/ubuntu18.04/* /usr/local/bin/
+which ar  as  ld  objcopy  objdump  ranlib
+```
+ought to be all in /usr/local/bin
+```
+wget https://github.com/intel/intel-sgx-ssl/archive/refs/tags/lin_2.16_1.1.1m_update.zip
+unzip lin_2.16_1.1.1m_update.zip
+pushd intel-sgx-ssl-lin_2.16_1.1.1m_update/openssl_source
+wget https://openssl.org/source/openssl-1.1.1m.tar.gz
+popd
+pushd intel-sgx-ssl-lin_2.16_1.1.1m_update/Linux
+make all test
+sudo make install
+popd
+```
+*If you insist on changing the location of the sgx family installation, look for the location marked # change_sgx_path in the code and change it to the corresponding value by referring to the normal location.*
+**!!! WARNING: Changing the installation location has not been successfully tested !!!**
+
+***
+Recommended for subsequent installations in boomerang/thirdparty
+
+***
 
 ### docopt (Option Parser)
+
 ```
-wget https://github.com/docopt/docopt.cpp/archive/refs/tags/v0.6.3.tar.gz\
-tar -zxf ./v0.6.3.tar.gz\
-cd ./docopt.cpp-0.6.3/\
-cmake .\
+wget https://github.com/docopt/docopt.cpp/archive/refs/tags/v0.6.3.tar.gz
+tar -zxf ./v0.6.3.tar.gz
+pushd ./docopt.cpp-0.6.3/
+cmake .
 make install
+popd
 ```
+***
 
 ### gRPC & Protocol Buffer
-Ref to (link)[https://grpc.io/docs/languages/cpp/quickstart/]
-Please reset `PROTO_INSTALL_DIR` and `GRPC_INSTALL_DIR` in `src/CMakeLists.txt` by the actual installation position.
+```
+cd thirdparty
+git submodule update --init
+```
+Protobuf:
+```
+pushd protobuf/cmake
+mkdir build
+pushd build
+cmake -Dprotobuf_BUILD_TESTS=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=`pwd`/../install ..
+make -j `nproc`
+sudo make install
+popd
+popd
+```
+gRPC:
+```
+pushd grpc
+git submodule update --init
+mkdir build
+pushd build
+cmake -DCMAKE_PREFIX_PATH=`pwd`/../../protobuf/cmake/install -DgRPC_INSTALL=ON -DgRPC_BUILD_TESTS=OFF \
+      -DgRPC_PROTOBUF_PROVIDER=package -DgRPC_ZLIB_PROVIDER=package -DgRPC_CARES_PROVIDER=module -DgRPC_SSL_PROVIDER=package \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_INSTALL_PREFIX=`pwd`/install \
+      ../
+make
+sudo make install
+popd
+popd
+```
+Please reset `PROTO_INSTALL_DIR` and `GRPC_INSTALL_DIR` in `src/CMakeLists.txt` by the actual installation position. They are marked as # grpc_path
 
 
 ## 1.2 Minimum Executable Environment Installation
@@ -158,7 +283,6 @@ All parameters in `/scripts/run.py` that can be modified are marked as TODO.
 `/run_client.sh /run_enode.sh /run_bnode.sh` : for testing Boomerang+ on the local.
 
 `/run_test_client.sh /run_test_bnode.sh` : for testting Boomerang on the local.
-
 
 If you need to test the network latency, please find the `TEST_NETWORK_LATENCY` variables in this project and assign them to `True`, the default values are `False`.
 If you need to modify the package size, please modify `PKT_SIZE` in `/src/common/ds.hpp`, the default is 256.
