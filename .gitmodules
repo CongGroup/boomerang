@@ -1,0 +1,6 @@
+[submodule "thirdparty/grpc"]
+	path = thirdparty/grpc
+	url = https://github.com/grpc/grpc.git
+[submodule "thirdparty/protobuf"]
+	path = thirdparty/protobuf
+	url = https://github.com/protocolbuffers/protobuf.git
