@@ -51,7 +51,7 @@ sgx 2 supported: 0
 ```
 
 or you can check using "cpuid -1 | grep -i sgx"
-the output should be three "true" with a "false" in the end
+the output should be like this, note that the first two lines must be true, and at least one of the last two lines needs to be true.
 ```
   SGX: Software Guard Extensions supported = true
   SGX_LC: SGX launch config supported      = true
@@ -101,6 +101,7 @@ You can find sample code for testing from /opt/intel/sgxsdk/SampleCode/SampleEnc
 pushd /opt/intel/sgxsdk/SampleCode/SampleEnclave
 make
 ./app
+popd
 ```
 the output should be like:
 ```
@@ -109,7 +110,10 @@ Info: executing thread synchronization, please wait...
 Info: SampleEnclave successfully returned.
 Enter a character before exit ...
 ```
-
+from boomerang copy FindSGXSDK.cmake to /opt/intel/sgxsdk/
+```
+cp <CodePath>/boomerang/FindSGXSDK.cmake /opt/intel/sgxsdk/
+```
 #### SGX SSL
 install ToolChain
 ```
