@@ -62,14 +62,14 @@ the output should be like this, note that the first two lines must be true, and 
 ```
 if supported, install all SGX tools in /opt/intel:
 ```
-mkdir -p /opt/intel
+sudo mkdir -p /opt/intel
 cd /opt/intel
 ```
 **!!! WARNING: Do not try to change the installation path, some variables are hard-coded in the code !!!**
 
 #### SGX Driver
 ```
-wget https://download.01.org/intel-sgx/sgx-linux/2.16/distro/ubuntu18.04-server/sgx_linux_x64_driver_1.41.bin
+sudo wget https://download.01.org/intel-sgx/sgx-linux/2.16/distro/ubuntu18.04-server/sgx_linux_x64_driver_1.41.bin
 sudo chmod 777 ./sgx_linux_x64_driver_1.41.bin
 sudo ./sgx_linux_x64_driver_1.41.bin
 ```
@@ -86,7 +86,7 @@ sudo apt install -y libsgx-quote-ex libsgx-urts
 ```
 #### SGX SDK
 ```
-wget https://download.01.org/intel-sgx/sgx-linux/2.16/distro/ubuntu18.04-server/sgx_linux_x64_sdk_2.16.100.4.bin
+sudo wget https://download.01.org/intel-sgx/sgx-linux/2.16/distro/ubuntu18.04-server/sgx_linux_x64_sdk_2.16.100.4.bin
 sudo chmod 777 ./sgx_linux_x64_sdk_2.16.100.4.bin
 sudo ./sgx_linux_x64_sdk_2.16.100.4.bin
 ```
@@ -99,7 +99,7 @@ source ~/.bashrc
 You can find sample code for testing from /opt/intel/sgxsdk/SampleCode/SampleEnclave
 ```
 pushd /opt/intel/sgxsdk/SampleCode/SampleEnclave
-make
+sudo make
 ./app
 popd
 ```
@@ -117,20 +117,20 @@ cp <CodePath>/boomerang/FindSGXSDK.cmake /opt/intel/sgxsdk/
 #### SGX SSL
 install ToolChain
 ```
-wget https://download.01.org/intel-sgx/sgx-linux/2.16/as.ld.objdump.r4.tar.gz
-tar -zxf ./as.ld.objdump.r4.tar.gz
+sudo wget https://download.01.org/intel-sgx/sgx-linux/2.16/as.ld.objdump.r4.tar.gz
+sudo tar -zxf ./as.ld.objdump.r4.tar.gz
 sudo cp external/toolset/ubuntu18.04/* /usr/local/bin/
 which ar  as  ld  objcopy  objdump  ranlib
 ```
 ought to be all in /usr/local/bin
 ```
-wget https://github.com/intel/intel-sgx-ssl/archive/refs/tags/lin_2.16_1.1.1m_update.zip
-unzip lin_2.16_1.1.1m_update.zip
+sudo wget https://github.com/intel/intel-sgx-ssl/archive/refs/tags/lin_2.16_1.1.1m_update.zip
+sudo unzip lin_2.16_1.1.1m_update.zip
 pushd intel-sgx-ssl-lin_2.16_1.1.1m_update/openssl_source
-wget https://openssl.org/source/openssl-1.1.1m.tar.gz
+sudo wget https://openssl.org/source/openssl-1.1.1m.tar.gz
 popd
 pushd intel-sgx-ssl-lin_2.16_1.1.1m_update/Linux
-make all test
+sudo make all test
 sudo make install
 popd
 ```
@@ -149,7 +149,7 @@ wget https://github.com/docopt/docopt.cpp/archive/refs/tags/v0.6.3.tar.gz
 tar -zxf ./v0.6.3.tar.gz
 pushd ./docopt.cpp-0.6.3/
 cmake .
-make install
+sudo make install
 popd
 ```
 ***
@@ -161,12 +161,13 @@ git submodule update --init
 ```
 Protobuf:
 ```
+sudo apt-get install build-essential autoconf libtool pkg-config automake zlib1g-dev
 pushd protobuf/cmake
 mkdir build
 pushd build
 cmake -Dprotobuf_BUILD_TESTS=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=`pwd`/../install ..
 make -j `nproc`
-sudo make install
+make install
 popd
 popd
 ```
@@ -182,7 +183,7 @@ cmake -DCMAKE_PREFIX_PATH=`pwd`/../../protobuf/cmake/install -DgRPC_INSTALL=ON -
       -DCMAKE_INSTALL_PREFIX=`pwd`/install \
       ../
 make
-sudo make install
+make install
 popd
 popd
 ```
