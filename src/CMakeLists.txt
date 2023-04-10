@@ -12,8 +12,8 @@ find_package(docopt COMPONENTS CXX REQUIRED)  # docopt_DIR: /usr/local/lib/cmake
 # find_package(Seastar REQUIRED)  # Seastar_DIR: /usr/local/lib/cmake/Seastar
 
 # GRPC and Protocol Buffers libraries location and finding
-set(PROTO_INSTALL_DIR "/home/ksolive/code/boomerang/third_party/protobuf/cmake/install")  # grpc_path
-set(GRPC_INSTALL_DIR "/home/ksolive/code/boomerang/third_party/grpc/build/install") # grpc_path
+set(PROTO_INSTALL_DIR "/home/ksolive/code/boomerang/thirdparty/protobuf/cmake/install")  # grpc_path
+set(GRPC_INSTALL_DIR "/home/ksolive/code/boomerang/thirdparty/grpc/build/install") # grpc_path
 list(APPEND CMAKE_PREFIX_PATH ${PROTO_INSTALL_DIR} ${GRPC_INSTALL_DIR})
 find_package(Protobuf REQUIRED)
 find_package(gRPC CONFIG REQUIRED)
