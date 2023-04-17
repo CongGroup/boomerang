@@ -1,0 +1,29 @@
+<!-- Please refer to User's Guide for the explanation of each field -->
+<EnclaveConfiguration>
+  <ProdID>0</ProdID>
+  <ISVSVN>0</ISVSVN>
+  <!-- 0x1e5=1M -->
+  <!-- for 2^16 users -->
+  <StackMaxSize>0x100000</StackMaxSize>
+  <HeapMaxSize>0x2000000</HeapMaxSize>
+  <!-- for 2^18 users -->
+  <!-- <StackMaxSize>0x400000</StackMaxSize> -->
+  <!-- <HeapMaxSize>0x8000000</HeapMaxSize> -->
+  <!-- for 2^20 users -->
+  <!-- <StackMaxSize>0x1000000</StackMaxSize> -->
+  <!-- <HeapMaxSize>0x30000000</HeapMaxSize> -->
+   <!-- for 2^21 users -->
+  <!-- <StackMaxSize>0x2000000</StackMaxSize> -->
+  <!-- <HeapMaxSize>0x60000000</HeapMaxSize> -->
+  <!-- for 2^22 users -->
+  <!-- <StackMaxSize>0x4000000</StackMaxSize> -->
+  <!-- <HeapMaxSize>0x90000000</HeapMaxSize> -->
+  <!-- enclave max thread num -->
+  <TCSNum>16</TCSNum>
+  <TCSMaxNum>16</TCSMaxNum>
+  <!-- TCS management policy, 0 – TCS is bound to the untrusted thread -->
+  <TCSPolicy>1</TCSPolicy>
+  <DisableDebug>0</DisableDebug>
+  <MiscSelect>0</MiscSelect>
+  <MiscMask>0xFFFFFFFF</MiscMask>
+</EnclaveConfiguration>

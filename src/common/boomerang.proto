@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package boomerang;
+
+// The greeting service definition.
+service BoomerangService {
+  rpc SendMsg (PayloadWithRes) returns (Payload) {}
+}
+
+message Payload {
+  bytes data = 1;
+}
+
+message PayloadWithRes {
+  uint64 reserved = 1;
+  bytes data = 2;
+}
+
