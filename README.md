@@ -1,8 +1,9 @@
 # Boomerang: Metadata-Private Messaging under Hardware Trust
-Boomerang is an alternative metadata-private messaging system leveraging the readily available trust assumption on secure enclave(as those emerging in the cloud). Through a number of carefully tailored oblivious techniques on message shuffling, workload distribution, and proactive patching of the communication pattern, Boomerang brings together low latency, horizontal scalability, and cryptographic
+Welcome to the Boomerang repository! Boomerang is an alternative metadata-private messaging system leveraging the readily available trust assumption on secure enclave(as those emerging in the cloud). Through a number of carefully tailored oblivious techniques on message shuffling, workload distribution, and proactive patching of the communication pattern, Boomerang brings together low latency, horizontal scalability, and cryptographic
 security, without prohibitive extra cost. See our [paper](https://www.usenix.org/conference/nsdi23/presentation/jiang) for more details.
 
-We are still refining the instructions for Boomerang to help you run it in your enviorment fast. 
+We are continuously refining the instructions for Boomerang to help you get up and running as quickly as possible. In the meantime, please follow the steps below to set up and run Boomerang.
+
 
 # 1. Installation
 
@@ -35,7 +36,7 @@ sudo apt install -y build-essential ocaml ocamlbuild automake autoconf libtool w
 * sgx psw: no version
 * sgx ssl: linux-2.16-1.1.1m (https://github.com/intel/intel-sgx-ssl/archive/refs/tags/lin_2.16_1.1.1m_update.zip)
 * openssl: 1.1.1m
-#### You should test first if SGX is supported.
+#### Before starting everything, you first should test if SGX is supported.
 ```
 git clone https://github.com/ayeks/SGX-hardware.git
 cd SGX-hardware
@@ -139,7 +140,7 @@ sudo make all test
 sudo make install
 popd
 ```
-*If you insist on changing the location of the sgx family installation, look for the location marked # change_sgx_path in the code and change it to the corresponding value by referring to the normal location.*
+* (Not suggested) If you want to change the location of the sgx family installation, look for the location marked # change_sgx_path in the code and change it to the corresponding value by referring to the normal location.*
 
 ***
 Recommended for subsequent installations in boomerang/thirdparty
@@ -280,7 +281,7 @@ python3 run.py --stop
 
 All parameters in `/scripts/run.py` that can be modified are marked as TODO.
 
-# 4. Extra Detail
+# 4. More Details
 `/src/client /src/enode /src/bnode /src/common` : all files related to the multi-servers Boomerang+.
 
 `/src/test_client /src/test_bnode /src/common` : all files related to the single-server Boomerang.
